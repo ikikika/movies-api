@@ -8,6 +8,6 @@ from movies_api import models
 class MoviesViewSet(viewsets.ModelViewSet):  # ModelViewSet need queryset
     """Handle querying profiles"""
     serializer_class = serializers.MovieSerializer
-    queryset = models.Movie.objects.all()
+    queryset = models.Movie.objects.all().order_by('title')
     filter_backends = (filters.SearchFilter,)
     search_fields = ('title',)

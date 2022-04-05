@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -7,9 +8,9 @@ const Header = () => {
       style={style}
     >
       <div className="container">
-        <a class="navbar-brand" href="#">
+        <Link className="navbar-brand" to="/">
           Demo Streaming
-        </a>
+        </Link>
         <ul className="navbar-nav">
           <li className="nav-item">
             <button type="button" className="btn text-white">

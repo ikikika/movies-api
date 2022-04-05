@@ -1,17 +1,61 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 import { fetchMovies } from "../../../state/actions/MovieActions";
 
+const Items = ({ currentItems }) => {
+  return (
+    <>
+      {currentItems &&
+        currentItems.map((movie) => (
+          <div className="col-sm-2 mb-3" key={movie.id}>
+            <Link to={`/movie/${movie.id}`}>
+              <div className="card">
+                <img
+                  className="card-img-top"
+                  src={movie.imagesUrl}
+                  alt="Card image"
+                />
+                <div className="card-body">
+                  <h4 className="card-title">{movie.title}</h4>
+                </div>
+              </div>
+            </Link>
+          </div>
+        ))}
+    </>
+  );
+};
+
 const MoviesAll = () => {
+  const itemsPerPage = 30;
+
   const { movies } = useSelector((state) => state.movies);
   const dispatch = useDispatch();
+
+  const [currentItems, setCurrentItems] = useState(movies);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
 
   useEffect(() => {
     dispatch(fetchMovies());
   }, []);
 
-  console.log(movies);
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    setCurrentItems(movies.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(movies.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, movies]);
+
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % movies.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
 
   return (
     <div className="container" style={style.contentWrapper}>
@@ -33,23 +77,26 @@ const MoviesAll = () => {
         </select>
       </div>
       <div className="row">
-        {movies &&
-          movies.map((movie) => (
-            <div className="col-sm-2 mb-3" key={movie.id}>
-              <Link to={`/movie/${movie.id}`}>
-                <div className="card">
-                  <img
-                    className="card-img-top"
-                    src={movie.imagesUrl}
-                    alt="Card image"
-                  />
-                  <div className="card-body">
-                    <h4 className="card-title">{movie.title}</h4>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          ))}
+        <Items currentItems={currentItems} />
+      </div>
+
+      <div className="row">
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          containerClassName={"pagination"}
+          // pageClassName={"page-item"}
+          pageLinkClassName={"page-link"}
+          previousLinkClassName={"page-link"}
+          nextLinkClassName={"page-link"}
+          // disabledClassName={"page-link disabled"}
+          activeClassName={"page-item active"}
+        />
       </div>
     </div>
   );
@@ -60,6 +107,7 @@ export default MoviesAll;
 const style = {
   contentWrapper: {
     minHeight: "calc( 100vh - 92px )",
+    paddingBottom: "10px",
   },
   pageTitle: { fontSize: "30px", padding: "10px" },
   filterWrapper: {

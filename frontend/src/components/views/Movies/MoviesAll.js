@@ -1,11 +1,17 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchMovies } from "../../../state/actions/MovieActions";
 
 const MoviesAll = () => {
-  const state = useSelector((state) => state.movies);
+  const { movies } = useSelector((state) => state.movies);
+  const dispatch = useDispatch();
 
-  console.log(process.env.REACT_APP_API_URL);
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, []);
+
+  console.log(movies);
 
   return (
     <div className="container" style={style.contentWrapper}>
@@ -27,22 +33,23 @@ const MoviesAll = () => {
         </select>
       </div>
       <div className="row">
-        {[...Array(50)].map((value, index) => (
-          <div className="col-sm-2 mb-3" key={index}>
-            <Link to={`/movie/${index}`}>
-              <div className="card">
-                <img
-                  className="card-img-top"
-                  src="https://via.placeholder.com/150"
-                  alt="Card image"
-                />
-                <div className="card-body">
-                  <h4 className="card-title">John Doe {index}</h4>
+        {movies &&
+          movies.map((movie) => (
+            <div className="col-sm-2 mb-3" key={movie.id}>
+              <Link to={`/movie/${movie.id}`}>
+                <div className="card">
+                  <img
+                    className="card-img-top"
+                    src={movie.imagesUrl}
+                    alt="Card image"
+                  />
+                  <div className="card-body">
+                    <h4 className="card-title">{movie.title}</h4>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        ))}
+              </Link>
+            </div>
+          ))}
       </div>
     </div>
   );

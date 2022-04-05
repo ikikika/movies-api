@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
 import MoviesAll from "./components/views/Movies/MoviesAll.js";
-import MovieSingle from "./components/views/Movies/MovieSIngle";
+import MovieSingle from "./components/views/Movies/MovieSingle";
 
 const App = () => {
   return (

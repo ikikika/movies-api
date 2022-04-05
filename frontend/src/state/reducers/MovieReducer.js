@@ -1,11 +1,11 @@
-import { LOAD_ALL_MOVIES } from "../actions/MovieActions";
+import { FETCH_MOVIES } from "../actions/MovieActions";
 
-const initialState = [1, 2];
+const initialState = { movies: [] };
 
 const movieReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_ALL_MOVIES:
-      return state;
+    case FETCH_MOVIES:
+      return { ...state, movies: action.payload };
     default:
       return state;
   }

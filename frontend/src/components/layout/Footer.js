@@ -1,9 +1,12 @@
 import React from "react";
 
 const Footer = () => {
+  const today = new Date();
   return (
-    <div className="bg-dark text-white" style={style}>
-      fasdfs
+    <div className="bg-dark text-white">
+      <div className="container" style={style}>
+        Copyright © {today.getFullYear()}
+      </div>
     </div>
   );
 };
@@ -11,6 +14,7 @@ const Footer = () => {
 export default Footer;
 
 const style = {
-  backgroundColor: "red",
   height: "38px",
+  display: "flex",
+  alignItems: "center",
 };

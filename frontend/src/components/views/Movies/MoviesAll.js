@@ -6,7 +6,9 @@ import {
   fetchAllMovies,
   fetchFilteredMovies,
   sortMovies,
+  setLoadingToTrue,
 } from "../../../state/actions/MovieActions";
+import Loading from "../../layout/Loading";
 
 const Items = ({ currentItems }) => {
   return (
@@ -42,7 +44,9 @@ const Items = ({ currentItems }) => {
 const MoviesAll = () => {
   const itemsPerPage = 30;
 
-  const { movies } = useSelector((state) => state.moviesState);
+  const { loading, movies, message } = useSelector(
+    (state) => state.moviesState
+  );
 
   const dispatch = useDispatch();
 
@@ -75,6 +79,7 @@ const MoviesAll = () => {
   const filterTextInput = (event) => {
     setFilterText(event.target.value);
     if (event.target.value.length > 2) {
+      dispatch(setLoadingToTrue());
       dispatch(fetchFilteredMovies(event.target.value));
       setItemOffset(0);
     } else {
@@ -86,7 +91,10 @@ const MoviesAll = () => {
     dispatch(sortMovies(event.target.value));
   };
 
+  const [programType, setProgramType] = useState("all");
+
   const programTypeSelection = (event) => {
+    setProgramType(event.target.value);
     let moviesArray = [];
     if (event.target.value === "all") {
       moviesArray = movies;
@@ -101,7 +109,14 @@ const MoviesAll = () => {
   return (
     <div className="container" style={style.contentWrapper}>
       <div className="row" style={style.pageTitle}>
-        Popular Movies
+        Popular{" "}
+        {programType === "all"
+          ? "Movies and Series"
+          : programType === "movie"
+          ? "Movies"
+          : programType === "series"
+          ? "Series"
+          : ""}
       </div>
       <div className="row">
         <div className="col-sm-6 ">
@@ -144,9 +159,14 @@ const MoviesAll = () => {
           </div>
         </div>
       </div>
+
       <div className="row">
-        {movies.length ? (
+        {loading ? (
+          <Loading />
+        ) : movies.length ? (
           <Items currentItems={currentItems} />
+        ) : message ? (
+          <div>{message}</div>
         ) : (
           <div>No movies</div>
         )}

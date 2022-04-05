@@ -10,4 +10,4 @@ class MoviesViewSet(viewsets.ModelViewSet):  # ModelViewSet need queryset
     serializer_class = serializers.MovieSerializer
     queryset = models.Movie.objects.all()
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('title', 'releaseYear',)
+    search_fields = ('title',)

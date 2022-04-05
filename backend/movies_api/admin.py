@@ -53,7 +53,6 @@ class MovieAdmin(admin.ModelAdmin):
                     imagesWidth=fields[6],
                     imagesHeight=fields[7],
                 )
-                # print(fields[1])
 
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
